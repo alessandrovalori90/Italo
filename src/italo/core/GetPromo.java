@@ -4,12 +4,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class GetPromo {	
-	
+	private static final String GET_URL = "http://www.italotreno.it/it/programma-fedelta-italo-piu/Promozioni/";
+	private static char letters = 'L';
+	private static int  numbers [] = {0,0,0};
 	public GetPromo() {}
 
 	// stabilisce la connessione a tutte le pagine possibili
@@ -104,6 +106,41 @@ public class GetPromo {
 				return ++i;
 		}
 		throw new Exception();
+	}
+	
+	// incrementa le cifre finali dell'url 
+	private boolean add() {
+		if(numbers[2] < 9 ) {
+			numbers[2]++;
+			return true;
+		} else if (numbers[1] < 9 ){
+			numbers[2] = 0;
+			numbers[1]++;
+			return true;
+		} else if (numbers[0] < 9 ){
+			numbers[2] = 0;
+			numbers[1] = 0;
+			numbers[0]++;
+			return true;
+		}
+		return false;
+	}
+	
+	public void startFullScann() {
+		boolean end = true;
+		while (end){
+			String url_temp = GET_URL + letters + numbers[0] + numbers[1] + numbers[2];
+			GetPromo promo = new GetPromo();			
+			try {
+				promo.sendGetRequest(url_temp);
+				end = add();
+				TimeUnit.MILLISECONDS.sleep(200);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 

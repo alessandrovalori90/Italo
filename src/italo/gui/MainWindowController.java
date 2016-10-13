@@ -1,7 +1,14 @@
 package italo.gui;
 
+import italo.core.GetPromo;
+
 public class MainWindowController {
+
+	
 	public void test(){
-		System.out.println("woooooooooooooooooooooooooooooooooooooooooooooooooooow");
+		GetPromo promo = new GetPromo();
+		promo.startFullScann();
 	}
+	
+
 }
