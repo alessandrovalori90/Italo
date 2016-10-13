@@ -1,4 +1,4 @@
-package gui;
+package italo.gui;
 
 public class MainWindowController {
 	public void test(){

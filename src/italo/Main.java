@@ -3,7 +3,7 @@ package italo;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import core.GetPromo;
+import italo.core.GetPromo;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
