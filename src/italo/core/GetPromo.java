@@ -6,25 +6,30 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
 public class GetPromo {	
-	private static final String GET_URL = "http://www.italotreno.it/it/programma-fedelta-italo-piu/Promozioni/";
-	private static char letters = 'L';
-	private static int  numbers [] = {0,0,0};
+	private int data[] = null;
+	private HttpURLConnection con;
+	
 	public GetPromo() {}
-
-	// stabilisce la connessione a tutte le pagine possibili
-	// Encoding necessariamente in UTF8
-	// IOException due to the connection
-	public void sendGetRequest(String url) throws IOException {
+	
+	public int[] getData() {
+		return data;
+	}
+	public int coonection(String url) throws IOException{
+		System.out.println(url);
 		URL obj = new URL(url);
-		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+		con = (HttpURLConnection) obj.openConnection();
 		con.setRequestMethod("GET");		
 		int responseCode = con.getResponseCode();
-		System.out.println("url: "+ url +" GET Response Code: " + responseCode);
-		
-		if (responseCode == HttpURLConnection.HTTP_OK) { // success
+		return responseCode;
+				
+	}
+	
+	// stabilisce la connessione all'url richiesto e trova la data di scadenza
+	// Encoding necessariamente in UTF8
+	// IOException due to the connection
+	public boolean search() throws IOException {		
 			BufferedReader in = new BufferedReader(new InputStreamReader(
 					con.getInputStream(),"UTF8"));
 			String inputLine;
@@ -34,17 +39,12 @@ public class GetPromo {
 				response.append(inputLine);
 			}
 			in.close();
-			boolean found = false;
-			found = search(response.toString());
-			System.out.println(found);
-		} else {
-			System.out.println("GET request not worked");
-		}		
-
+			return searchSentence(response.toString());
 	}
 	
 	// cerca la frase che contiene la data all'interno della pagina
-	private boolean search(String buff) {
+	private boolean searchSentence(String buff) {
+		data = null;
 		Scanner s = new Scanner (buff);
 		// espressione regolare per identificare i separatori
 		s.useDelimiter("[\\s'.’]+");
@@ -54,10 +54,8 @@ public class GetPromo {
 			String temp = s.next();
 		    if (temp.equalsIgnoreCase("entro")) {
 		        found = true;
-		        try {
-		        	int data[];		        
+		        try {	        		        
 		        	data = interpreter(s);
-		        	System.out.println(data[0]+ "/" + data[1]);
 				} catch (Exception e) {
 					return false;
 				}
@@ -68,7 +66,6 @@ public class GetPromo {
 	}
 	
 	// interpreta il testo per trovare la data
-	// prendi le 3 parole dopo la parola chiave "entro" e salto la prima delle 3 per trovare la data di scadenza della promozione
 	private int[] interpreter(Scanner s) throws Exception {
 		String retString[] = new String[2];
 		int retInt[] = new int[2];
@@ -106,41 +103,6 @@ public class GetPromo {
 				return ++i;
 		}
 		throw new Exception();
-	}
-	
-	// incrementa le cifre finali dell'url 
-	private boolean add() {
-		if(numbers[2] < 9 ) {
-			numbers[2]++;
-			return true;
-		} else if (numbers[1] < 9 ){
-			numbers[2] = 0;
-			numbers[1]++;
-			return true;
-		} else if (numbers[0] < 9 ){
-			numbers[2] = 0;
-			numbers[1] = 0;
-			numbers[0]++;
-			return true;
-		}
-		return false;
-	}
-	
-	public void startFullScann() {
-		boolean end = true;
-		while (end){
-			String url_temp = GET_URL + letters + numbers[0] + numbers[1] + numbers[2];
-			GetPromo promo = new GetPromo();			
-			try {
-				promo.sendGetRequest(url_temp);
-				end = add();
-				TimeUnit.MILLISECONDS.sleep(200);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 
 
