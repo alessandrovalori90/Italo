@@ -4,17 +4,17 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
 public class GetPromo {	
-	public GetPromo() {
-		
-	}
+	
+	public GetPromo() {}
 
 	// stabilisce la connessione a tutte le pagine possibili
 	// Encoding necessariamente in UTF8
+	// IOException due to the connection
 	public void sendGetRequest(String url) throws IOException {
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
