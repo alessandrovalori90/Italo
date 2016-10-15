@@ -31,11 +31,6 @@ public class MainWindowController {
 	private Service<Void> backgroundThread;
 	
 	public void test(){
-		
-//		 myTask = new MyTask();
-//		 valid.accessibleTextProperty().bind(myTask.messageProperty());
-//		 myTaskThread = new Thread(myTask);
-//         myTaskThread.start();
          ObservableList<String> data = FXCollections.observableArrayList();	
 		backgroundThread = new Service<Void>() {	// background processing to avoid blocking the GUI			
 			@Override
@@ -55,21 +50,16 @@ public class MainWindowController {
 										if(util.checkExpired(promo.getData())) {
 											end = util.add();
 										} else {
-											data.add(util.getUrl());
-											//valid.setItems(data);	
-											//updateMessage(data.toString()); // non so perchè funziona al posto di
-											//Platform.runLater(() -> valid.accessibleTextProperty().set(data.toString()));
-											//Platform.runLater(() -> valid.setItems(data));
-											
-											cose(data);
-											/*
-											KeyFrame update = new KeyFrame(Duration.seconds(0.5), event -> { 
-												valid.setItems(data);
-											}); 
-											Timeline tl = new Timeline(update); 
-											tl.setCycleCount(Timeline.INDEFINITE);
-											tl.play();
-											*/
+											Platform.runLater(new Runnable() {
+												
+												@Override
+												public void run() {
+													data.add(util.getUrl());
+//													System.out.println(Platform.isFxApplicationThread());
+													valid.setItems(data);
+													
+												}
+											});
 										}
 									}
 								}
@@ -98,22 +88,11 @@ public class MainWindowController {
 			}
 		});
 		
-//		valid.accessibleTextProperty().bind(backgroundThread.messageProperty());
-//		expired.accessibleTextProperty().bind(backgroundThread.messageProperty());
-		
 		backgroundThread.restart();
 	}
 	
  public void cose( ObservableList<String> data){
 	 
-		Platform.runLater(new Runnable() {
-			
-			@Override
-			public void run() {
-//				System.out.println(Platform.isFxApplicationThread());
-				valid.setItems(data);
-				
-			}
-		});
+		
  }
 }
