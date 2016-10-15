@@ -17,7 +17,6 @@ public class GetPromo {
 		return data;
 	}
 	public int coonection(String url) throws IOException{
-		System.out.println(url);
 		URL obj = new URL(url);
 		con = (HttpURLConnection) obj.openConnection();
 		con.setRequestMethod("GET");		

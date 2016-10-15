@@ -11,8 +11,8 @@ public class Util {
 		letters = 'L';
 		numbers = new int[3];
 		numbers[0] = 0;
-		numbers[1] = 0;
-		numbers[2] = 0;
+		numbers[1] = 1;
+		numbers[2] = 8;
 	}
 	
 	public Util(char l, int[] n){
@@ -24,16 +24,17 @@ public class Util {
 		return GET_URL + letters + numbers[0] + numbers[1] + numbers[2];
 	}
 	
+	//return true if expired
 	public boolean checkExpired(int[] date) {
 		Calendar cal = Calendar.getInstance();
-		int month = cal.get(Calendar.MONTH);
+		int month = cal.get(Calendar.MONTH)+1;
 		if(month>date[1])
-			return false;
-		else if(month<date[1])
 			return true;
+		else if(month<date[1])
+			return false;
 		else {
 			int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
-			return dayOfMonth<date[0];
+			return dayOfMonth>date[0];
 		}
 	}
 	
