@@ -38,6 +38,7 @@ public class Util {
 		}
 	}
 	
+	// return true at 999
 	public boolean add() {
 		if(numbers[2] < 9 ) {
 			numbers[2]++;
@@ -50,7 +51,7 @@ public class Util {
 			numbers[2] = 0;
 			numbers[1] = 0;
 			numbers[0]++;
-			return true;
+			return false;
 		}
 		return true;
 	}

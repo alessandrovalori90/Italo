@@ -25,12 +25,12 @@ public class MainWindowController implements Initializable{
 	@FXML private ProgressBar progressBar;
 	private static Service<Void> backgroundThread;
 	
-	@FXML
 	public void test(){
 		if(backgroundThread != null) {
 			backgroundThread.cancel();
 			backgroundThread = null;
 			button1.setText("Start");
+			progressBar.setProgress(0);
 		
 		} else {
 			ObservableList<String> unknownLinks = FXCollections.observableArrayList();
@@ -49,24 +49,33 @@ public class MainWindowController implements Initializable{
 								if(isCancelled()) // check if is canceled
 									return null;
 								try {
-									int responce = promo.coonection(util.getUrl());
+									System.out.println(util.getUrl());
+									// we MUST save the result of getUrl before the execution of run later. because we dont know 
+									//when the thread is gona be scehduled and the url might already been incremented in this thread.
+									String tmp = util.getUrl(); 
+									int responce = promo.coonection(tmp);
 									if(responce == 200) { //OK
 										if(promo.search()) { //promotion expire date found
-											if(util.checkExpired(promo.getData())) {											
+											if(util.checkExpired(promo.getData())) {
 												Platform.runLater(new Runnable() {											
 													@Override
 													public void run() {
-														expiredLinks.add(util.getUrl());
+														expiredLinks.add(tmp);
 														expired.setItems(expiredLinks);
 													}
 												});
 												end = util.add();
-											} else {											
+											} else {	
+												
 												Platform.runLater(new Runnable() {											
 													@Override
 													public void run() {
-														validLinks.add(util.getUrl());
-														valid.setItems(validLinks);													
+														// we MUST save the result of getUrl before the execution of run later. because we dont know 
+														//when the thread is gona be scehduled and the url might already been incremented in this thread.
+														// that's why we use tmp instead of util.getUrl()
+														validLinks.add(tmp);
+														valid.setItems(validLinks);	
+														
 													}
 												});
 											}
@@ -74,21 +83,29 @@ public class MainWindowController implements Initializable{
 											Platform.runLater(new Runnable() {											
 												@Override
 												public void run() {
-													unknownLinks.add(util.getUrl());
+													unknownLinks.add(tmp);
 													valid.setItems(unknownLinks);											
 												}
 											});
 										}
 									}
-									end = util.add();
-									//TimeUnit.MILLISECONDS.sleep(200);
+									//Thread.sleep(100);
+
+										end = util.add();
+									
 								} catch (IOException e) {
 									// TODO Auto-generated catch block
 									System.out.println("Connection failed");
 								}
 								
 							}
-							button1.setText("Start");
+							Platform.runLater(new Runnable() {											
+								@Override
+								public void run() {
+									button1.setText("Start");
+									progressBar.setProgress(0);										
+								}
+							});
 							return null;
 						}
 					};
