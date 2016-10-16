@@ -43,7 +43,7 @@
       <Pane maxHeight="50.0" prefHeight="50.0" prefWidth="600.0">
          <children>
             <Button fx:id="button1" layoutX="14.0" layoutY="8.0" mnemonicParsing="false" onAction="#test" text="Start" />
-            <ProgressBar layoutX="386.0" layoutY="12.0" prefWidth="200.0" progress="0.0" />
+            <ProgressBar fx:id="progressBar" layoutX="386.0" layoutY="12.0" prefWidth="200.0" progress="0.0" />
             <Label layoutX="289.0" layoutY="13.0" text="Scann progress..." />
          </children>
       </Pane>

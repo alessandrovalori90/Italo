@@ -20,7 +20,7 @@ public class Util {
 		numbers = n;
 	}
 	
-	public String getUrl() {		
+	public String getUrl() {
 		return GET_URL + letters + numbers[0] + numbers[1] + numbers[2];
 	}
 	
