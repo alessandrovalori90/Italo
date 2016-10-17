@@ -2,6 +2,7 @@ package italo;
 
 import java.io.IOException;
 
+import italo.gui.MainWindowController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,8 +18,11 @@ public class Main extends Application{
 	
 	@Override
 	public void start(Stage stage) throws Exception {
-		Parent root = FXMLLoader.load(getClass().getResource("/italo/gui/MainWindow.fxml"));
-        Scene scene = new Scene(root);   
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/italo/gui/MainWindow.fxml"));
+		Parent root = loader.load();
+		MainWindowController controller = loader.getController();
+		controller.setApp(getHostServices());
+        Scene scene = new Scene(root);  
         stage.setTitle("Italo Promo Scanner");
         stage.setScene(scene);
         stage.show();

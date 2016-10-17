@@ -11,8 +11,8 @@ public class Util {
 		letters = 'L';
 		numbers = new int[3];
 		numbers[0] = 0;
-		numbers[1] = 1;
-		numbers[2] = 8;
+		numbers[1] = 0;
+		numbers[2] = 0;
 	}
 	
 	public Util(char l, int[] n){
@@ -23,7 +23,12 @@ public class Util {
 	public String getUrl() {
 		return GET_URL + letters + numbers[0] + numbers[1] + numbers[2];
 	}
-	
+	public String getUrlCode() {
+		return "" + numbers[0] + numbers[1] + numbers[2];
+	}
+	 public double getProgress() {
+		 return numbers[2] + numbers[1]*10 + numbers[0]*100;
+	 }
 	//return true if expired
 	public boolean checkExpired(int[] date) {
 		Calendar cal = Calendar.getInstance();

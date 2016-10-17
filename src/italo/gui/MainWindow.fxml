@@ -34,7 +34,7 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <ListView fx:id="unkown" layoutX="41.0" layoutY="44.0" prefHeight="331.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <ListView fx:id="unknown" layoutX="41.0" layoutY="44.0" prefHeight="331.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children></AnchorPane>
               </content>
             </Tab>
@@ -44,7 +44,7 @@
          <children>
             <Button fx:id="button1" layoutX="14.0" layoutY="8.0" mnemonicParsing="false" onAction="#test" text="Start" />
             <ProgressBar fx:id="progressBar" layoutX="386.0" layoutY="12.0" prefWidth="200.0" progress="0.0" />
-            <Label layoutX="289.0" layoutY="13.0" text="Scann progress..." />
+            <Label fx:id="label" layoutX="289.0" layoutY="13.0" text="Scann progress..." />
          </children>
       </Pane>
    </children>
