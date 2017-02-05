@@ -6,9 +6,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
+import java.util.regex.MatchResult;
 
 public class GetPromo {	
 	private int data[] = null;
+	private MatchResult anno;
 	private HttpURLConnection con;
 	
 	public GetPromo() {}
@@ -16,9 +18,13 @@ public class GetPromo {
 	public int[] getData() {
 		return data;
 	}
-	public int coonection(String url) throws IOException{
+	public MatchResult getAnno(){
+		return anno;
+	}
+	public int connection(String url) throws IOException{
 		URL obj = new URL(url);
 		con = (HttpURLConnection) obj.openConnection();
+		con.setConnectTimeout(15 * 1000);
 		con.setRequestMethod("GET");		
 		int responseCode = con.getResponseCode();
 		return responseCode;
@@ -38,30 +44,52 @@ public class GetPromo {
 				response.append(inputLine);
 			}
 			in.close();
-			return searchSentence(response.toString());
+
+			return searchHTML(response.toString());
 	}
 	
-	// cerca la frase che contiene la data all'interno della pagina
-	private boolean searchSentence(String buff) {
-		data = null;
+	private boolean searchHTML(String buff){
+		boolean found = false;
+		boolean foundDiv = false;
 		Scanner s = new Scanner (buff);
 		// espressione regolare per identificare i separatori
 		s.useDelimiter("[\\s'.’]+");
-		boolean found = false;
 		while (s.hasNext()) {
 			//la data è scritta sempre dopo la parola entro Ex: da comprare entro lunedi 11 ottobre
 			String temp = s.next();
-		    if (temp.equalsIgnoreCase("entro")) {
-		        found = true;
-		        try {	        		        
-		        	data = interpreter(s);
-				} catch (Exception e) {
-					return false;
-				}
-		        break;
+			if(temp.contains("informativa-image")&&found){
+				s.close();
+				return found;
+			}
+		    if (temp.contains("box-informativa"))
+		    	foundDiv = true;
+		    if(foundDiv){
+		    	if (temp.equalsIgnoreCase("entro")) {
+			        found = true;
+			        try {	        		        
+			        	data = interpreter(s); //if it doest find the date if gives exception
+			        	boolean ret =searchYear(s);
+			        	s.close();
+			        	return ret;
+					} catch (Exception e) {
+						return false;
+					}
+		    	}
 		    }
-		}		
+		}
+		s.close();
 		return found;
+		
+	}
+	
+	private boolean searchYear(Scanner s) {
+		s.findInLine("(201\\d)");
+		MatchResult tmp = s.match();
+		if(tmp!=null) {
+			anno = tmp;
+			return true;
+		}
+		return false;
 	}
 	
 	// interpreta il testo per trovare la data

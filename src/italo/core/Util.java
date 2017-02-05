@@ -1,6 +1,7 @@
 package italo.core;
 
 import java.util.Calendar;
+import java.util.regex.MatchResult;
 
 public class Util {
 	private final String GET_URL = "http://www.italotreno.it/it/programma-fedelta-italo-piu/Promozioni/";
@@ -30,9 +31,14 @@ public class Util {
 		 return numbers[2] + numbers[1]*10 + numbers[0]*100;
 	 }
 	//return true if expired
-	public boolean checkExpired(int[] date) {
+	public boolean checkExpired(int[] date, MatchResult anno) {
 		Calendar cal = Calendar.getInstance();
 		int month = cal.get(Calendar.MONTH)+1;
+		int year = cal.get(Calendar.YEAR);
+		if(anno.groupCount()>0){
+			int annoInt = Integer.parseInt(anno.group(0).toString());
+			if(annoInt<year) return true;
+		}
 		if(month>date[1])
 			return true;
 		else if(month<date[1])

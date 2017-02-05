@@ -77,10 +77,10 @@ public class MainWindowController implements Initializable{
 									// we MUST save the result of getUrl before the execution of run later. because we dont know 
 									//when the thread is gona be scehduled and the url might already been incremented in this thread.
 									String tmp = util.getUrl(); 
-									int responce = promo.coonection(tmp);
+									int responce = promo.connection(tmp);
 									if(responce == 200) { //OK
 										if(promo.search()) { //promotion expire date found
-											if(util.checkExpired(promo.getData())) {
+											if(util.checkExpired(promo.getData(), promo.getAnno())) {
 												Platform.runLater(new Runnable() {											
 													@Override
 													public void run() {
@@ -151,9 +151,14 @@ public class MainWindowController implements Initializable{
 													progressBar.setProgress(prog);
 											}
 										});
-								} catch (IOException e) {
-									// TODO Auto-generated catch block
-									System.out.println("Connection failed");
+								} catch (IOException e) { //in case there is no connection							
+									Platform.runLater(new Runnable() {											
+										@Override
+										public void run() {									
+											label.setText("Check connection");
+
+										}
+									});
 								}
 								
 							}
